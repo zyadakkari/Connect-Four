@@ -9,6 +9,7 @@ class Game
     create_board()
     @players = Player.new
     @turn = 0
+    @winner = false
 
   end
 
@@ -62,6 +63,32 @@ class Game
     end
   end
 
+  def horizontal_winner(playermoves=@curPlayer[:moves])
+#each cons not working as required
+    playermoves = playermoves.sort
+    movesHash = Hash[
+      playermoves.group_by(&:first).collect do |key, values|
+        [ key, values.collect { |v| v[1] }]
+      end
+    ]
+    for key in movesHash.keys
+        binding.pry
+      movesHash[key].each_cons(2) { |obj| p obj }
+    end
+    @winner
+  end
+
+  def vertical_winner(playermoves=@curPlayer[:moves])
+    playermoves = playermoves.sort
+    movesHash = playermoves.group_by { |move| move.pop }.transform_values do |values|
+      values.flatten
+    end
+    for key in movesHash.keys
+      movesHash[key].each_cons(4) { |obj| @winner = true }
+    end
+    @winner
+  end
+
   def play_turn()
     turn_decider()
     show_board()
@@ -92,5 +119,5 @@ class Player < Game
   end
 end
 
-newGame = Game.new
-newGame.find_valid_square_in_column(0)
+# newGame = Game.new
+# newGame.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 3], [4, 1]])
