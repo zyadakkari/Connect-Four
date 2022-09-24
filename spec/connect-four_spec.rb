@@ -74,6 +74,33 @@ describe Game do
       end
     end
 
+    describe "#horizontal_winner?" do
+      # it "returns true if player has 4 consecutive squares in the same row" do
+      #   expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 3], [4, 1]])).to eql(true)
+      # end
+
+      it "returns false if player does not have 4 cons squares" do
+        expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 6], [4, 1], [5, 5], [5, 3]])).to eql(false)
+      end
+    end
+
+    describe "#vertical_winner?" do
+      it "returns true if player has 4 consecutive squares in the same column" do
+        expect(subject.vertical_winner([[5, 0], [4, 0], [3, 0], [2, 0], [4, 1]])).to eql(true)
+      end
+
+      it "returns false if player does not have 4 cons squares in same column" do
+        expect(subject.vertical_winner([[3, 0], [5, 1], [5, 2], [5, 3], [4, 1]])).to eql(false)
+      end
+    end
+
+    describe "#diagonal_winner?" do
+      it "returns true if player has 4 consecutive diagonal squares" do
+        expect(subject.diagonal_winner([[5, 0], [4, 1], [3, 2], [4, 3]])).to eql(true)
+      end
+    end
+
+
 end
 
 describe Player do
