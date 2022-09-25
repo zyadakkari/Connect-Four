@@ -72,8 +72,11 @@ class Game
       end
     ]
     for key in movesHash.keys
-        binding.pry
-      movesHash[key].each_cons(2) { |obj| p obj }
+        movesHash[key].each_cons(4) do |obj|
+          if obj[1] == obj[0] + 1 && obj[2] == obj[1] + 1 && obj[3] == obj[2] + 1
+            @winner = true
+          end
+        end
     end
     @winner
   end
@@ -84,7 +87,11 @@ class Game
       values.flatten
     end
     for key in movesHash.keys
-      movesHash[key].each_cons(4) { |obj| @winner = true }
+      movesHash[key].each_cons(4) do |obj|
+        if (obj[1] == obj[0] + 1) && (obj[2] == obj[1] + 1) && (obj[3] == obj[2] + 1)
+          @winner = true
+        end
+      end
     end
     @winner
   end
@@ -120,4 +127,4 @@ class Player < Game
 end
 
 # newGame = Game.new
-# newGame.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 3], [4, 1]])
+# newGame.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 6], [4, 1]])
