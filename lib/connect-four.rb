@@ -1,8 +1,11 @@
 require 'pry-byebug'
+require './lib/diagonal-win-check.rb'
 
 class Game
 
-  attr_accessor :board, :turn
+  include DiagonalCheckable
+
+  attr_accessor :board, :turn, :square
   attr_reader :players, :choice
 
   def initialize()
@@ -23,7 +26,6 @@ class Game
   end
 
   def show_board()
-    # p @board
     @board.each { |row|  p row}
   end
 
@@ -34,6 +36,7 @@ class Game
     else
       @curPlayer = self.players.players[1]
     end
+    puts "Your turn #{@curPlayer[:name]}"
 
   end
 
@@ -50,7 +53,6 @@ class Game
   end
 
   def find_valid_square_in_column(choice=@choice)
-# binding.pry
     @i = 5
     while !@board[@i][choice].nil? && @i >= 0
       @i -= 1
@@ -64,7 +66,6 @@ class Game
   end
 
   def horizontal_winner(playermoves=@curPlayer[:moves])
-#each cons not working as required
     playermoves = playermoves.sort
     movesHash = Hash[
       playermoves.group_by(&:first).collect do |key, values|
@@ -82,10 +83,13 @@ class Game
   end
 
   def vertical_winner(playermoves=@curPlayer[:moves])
-    playermoves = playermoves.sort
-    movesHash = playermoves.group_by { |move| move.pop }.transform_values do |values|
-      values.flatten
-    end
+    sortedmoves = playermoves.sort
+    sortedmoves = sortedmoves.map { |arr| arr = [arr[1], arr[0]] }
+    movesHash = Hash[
+      sortedmoves.group_by(&:first).collect do |key, values|
+        [ key, values.collect { |v| v[1] }]
+      end
+    ]
     for key in movesHash.keys
       movesHash[key].each_cons(4) do |obj|
         if (obj[1] == obj[0] + 1) && (obj[2] == obj[1] + 1) && (obj[3] == obj[2] + 1)
@@ -96,6 +100,16 @@ class Game
     @winner
   end
 
+  def diagonal_winner(square, moves=@curPlayer[:moves])
+    while @winner == false
+      right_up_diagonal(square, moves)
+      right_down_diagonal(square, moves)
+      left_up_diagonal(square, moves)
+      left_down_diagonal(square, moves)
+      return @winner
+    end
+  end
+
   def play_turn()
     turn_decider()
     show_board()
@@ -103,7 +117,19 @@ class Game
     square = find_valid_square_in_column()
     edit_board(@curPlayer[:symbol], square)
     @curPlayer[:moves] << square
-    show_board()
+    horizontal_winner()
+    vertical_winner()
+    begin
+      diagonal_winner(square)
+    rescue
+    end
+  end
+
+  def game()
+    while @winner == false
+      play_turn()
+    end
+    puts "the winner is #{@curPlayer[:name]}! Well done!"
   end
 end
 
@@ -126,5 +152,5 @@ class Player < Game
   end
 end
 
-# newGame = Game.new
-# newGame.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 6], [4, 1]])
+newGame = Game.new
+newGame.game()
