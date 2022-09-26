@@ -1,4 +1,5 @@
 require './lib/connect-four.rb'
+require './lib/diagonal-win-check.rb'
 
 describe Game do
 
@@ -75,12 +76,12 @@ describe Game do
     end
 
     describe "#horizontal_winner?" do
-      # it "returns true if player has 4 consecutive squares in the same row" do
-      #   expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 3], [4, 1]])).to eql(true)
-      # end
+      it "returns true if player has 4 consecutive squares in the same row" do
+        expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 3], [4, 1]])).to eql(true)
+      end
 
       it "returns false if player does not have 4 cons squares" do
-        expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 6], [4, 1], [5, 5], [5, 3]])).to eql(false)
+        expect(subject.horizontal_winner([[5, 0], [5, 1], [5, 2], [5, 6], [4, 1], [5, 5]])).to eql(false)
       end
     end
 
@@ -95,8 +96,20 @@ describe Game do
     end
 
     describe "#diagonal_winner?" do
-      it "returns true if player has 4 consecutive diagonal squares" do
-        expect(subject.diagonal_winner([[5, 0], [4, 1], [3, 2], [4, 3]])).to eql(true)
+      it "returns true if player has 4 consecutive diagonal squares starting bottom left" do
+        expect(subject.diagonal_winner([5, 0], [[4, 1], [3, 2], [2, 3]])).to eql(true)
+      end
+
+      it "returns true if player has 4 consecutive diagonal squares starting top left" do
+        expect(subject.diagonal_winner([0, 0], [[1,1], [2,2], [3,3]])).to eql(true)
+      end
+
+      it "returns true if player has 4 consecutive diagonal squares starting bottom right" do
+        expect(subject.diagonal_winner([5,6], [[4, 5], [3, 4], [2, 3]])).to eql(true)
+      end
+
+      it "returns true if player has 4 consecutive diagonal squares starting top right" do
+        expect(subject.diagonal_winner([0, 6], [[1, 5], [2, 4], [3, 3]])).to eql(true)
       end
     end
 
