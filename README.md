@@ -3,6 +3,7 @@
 Features to come:
 - UI improvement
 - computer player
+- add save function
 
 
 Building connect four using Test Driven Development
