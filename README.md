@@ -1,4 +1,6 @@
-# Connect-Four
+# *TOP Ruby: Connect-Four*
+
+https://www.theodinproject.com/lessons/ruby-connect-four
 
 Features to come:
 - UI improvement
